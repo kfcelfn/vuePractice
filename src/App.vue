@@ -1,32 +1,44 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    {{name}} -- {{age}}
+    <!-- 多个参数 又想拿到event 必须是$event -->
+    <div :name='name' @click="onCLick('铁柱',$event)">点击</div> 
+    <a 
+      href='http://www.baidu.com'
+      target='_blank'
+      @click.prevent.stop='goBack'
+      :class="{active: isActive, 'app_goBack': isGoBack}"
+    >跳转
+    </a>
+    <!-- 多个class 加条件语句可以这样写， 如果加_ - 就要加引号 -->
+    <div v-if="eq =='添加'">{{name}}</div>
+    <div v-else>{{name}}</div>
   </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+  import './styles.css'
 
-#nav {
-  padding: 30px;
-}
+  export default {
+    data () {
+      // 必须返回一个对象
+      return {
+        name: 'tiezhu',
+        age: 100,
+        isActive: true,
+        isGoBack: true,
+        eq:'添加'
+      }
+    },
+  
+    methods: {
+      onCLick (option,event) {
+        console.log(option, event)
+      },
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+      goBack () {
+        console.log(11)
+      }
+    }
+  }
+</script>
