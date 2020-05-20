@@ -1,13 +1,15 @@
 <template>
   <div class="home">
-    home
   </div>
 </template>
 
 <script>
 
 export default {
-  components: {
+  props:['query'],
+
+  created () {
+    console.log(this.query)
   }
 }
 </script>
