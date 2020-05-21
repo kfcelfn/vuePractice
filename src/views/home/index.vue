@@ -5,7 +5,7 @@
     <!-- 第二种 -->
     <!-- {{name}}--{{aname}} -- {{stateFn}} -->
     <!-- 第三种常用 -->
-    {{name}}--{{age}}-- {{aname}}
+    {{name}}--{{age}}
     <button @click="editName">修改name值</button>
     <h1>{{count}}</h1>
     <button @click="onAdd">+</button>
@@ -41,15 +41,12 @@ export default {
 
   //第三种拿值方法  mapState 数组方法   ***常用
   computed: {
-    ...mapState(['name', 'age', 'count', 'data']),
-
-    aname () {
-      return 123
-    }
+    ...mapState(['name', 'age', 'count', 'data'])
   },
 
   methods: {
     ...mapActions(['FETCH_GET_DATA']),
+
     editName () {
       // commit 触发 mutations
       this.$store.commit('EDIT_NAME')
@@ -61,6 +58,7 @@ export default {
     },
 
     onLow () {
+      //这里让他减到1就停止，这个停止逻辑一定要再这里写，不能再mutations写 
       if( this.count === 1 )  return
       // commit 触发 mutations
       this.$store.commit('FETCH_COUNT', false)
