@@ -1,78 +1,108 @@
 <template>
-  <div class="home">
-    <!-- 第一种 -->
-    <!-- {{name}}   -->
-    <!-- 第二种 -->
-    <!-- {{name}}--{{aname}} -- {{stateFn}} -->
-    <!-- 第三种常用 -->
-    {{name}}--{{age}}
-    <button @click="editName">修改name值</button>
-    <h1>{{count}}</h1>
-    <button @click="onAdd">+</button>
-    <button @click="onLow">-</button>
-    <button @click="onGetData">请求数据</button>
-    <p>{{data}}</p>  
+  <div class="views_home">
+    <div class="search">
+      <el-input v-model="searchVal" placeholder="请输入内容"></el-input>
+      <el-button type="success">搜索</el-button>
+    </div>
+
+    <div class="insert">
+      <el-button type="primary" @click="addBefore">添加</el-button>
+    </div>
+
+    <Tabel :data="data" @edit-data="editData" @delete-data="deleteData" />
+
+    <Form
+      :dialogVisible="dialogVisible"
+      :id="id"
+      :ruleForm="ruleForm"
+      @on-dialogVisible="toggleDialogVisible"
+      @on-submit="onSumibt"
+    />
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import "./styles.less";
+import { mapState, mapActions } from "vuex";
+import Tabel from "@/components/Table";
+import Form from "@/components/Form";
 
 export default {
-  created () {
+  components: { Tabel, Form },
+  data() {
+    return {
+      searchVal: "",
+      ruleForm: {
+        name: "",
+        age: ""
+      },
+      id: ""
+    };
   },
-
-  //第一种拿值方法
-  // computed: {
-  //   name () {
-  //     return this.$store.state.name
-  //   }
-  // }
-
-  // 第二种写法 使用 mapState 对象方法
-  // computed: mapState({
-  //   // 对象方式， 有三种拿值方法
-  // name: state => state.name,
-
-  // aname: 'name',  //一般取别名的时候用
-
-  // stateFn (state) { return state.name + state.age } //这里尽量不要用箭头函数， 使用普通函数，有this
-  // })
-
-  //第三种拿值方法  mapState 数组方法   ***常用
+  created() {
+    this.$store.dispatch("FETCH_GET_DATA");
+  },
   computed: {
-    ...mapState(['name', 'age', 'count', 'data'])
+    ...mapState(["data", "dialogVisible"])
   },
 
   methods: {
-    ...mapActions(['FETCH_GET_DATA']),
+    ...mapActions({
+      delete: 'FETCH_DELETE_DATA',
+      editDialogVisible: "FETCH_DIALOGVISIBLE",
+      addData: "FETCH_ADD_DATA",
+      editDatas: "FETCH_EDIT_DATA"
+    }),
 
-    editName () {
-      // commit 触发 mutations
-      this.$store.commit('EDIT_NAME')
+    // 添加前
+    addBefore() {
+      this.toggleDialogVisible(this.dialogVisible);
+      this.id = "";
+      this.ruleForm.name = "";
+      this.ruleForm.age = "";
     },
-
-    onAdd () {
-      // commit 触发 mutations
-      this.$store.commit('FETCH_COUNT', true)
+    // 修改前
+    editData(option) {
+      this.id = option.id;
+      this.toggleDialogVisible(this.dialogVisible);
+      this.ruleForm.name = option.name;
+      this.ruleForm.age = option.age;
     },
-
-    onLow () {
-      //这里让他减到1就停止，这个停止逻辑一定要再这里写，不能再mutations写 
-      if( this.count === 1 )  return
-      // commit 触发 mutations
-      this.$store.commit('FETCH_COUNT', false)
+    // 删除
+    deleteData(id) {
+      this.delete({id})
+        .then(res => {
+          if (res.data.status == 200) {
+            this.$message.success("删除成功");
+            this.$store.dispatch("FETCH_GET_DATA");
+          }
+      });
     },
-
-    onGetData () {
-      // this.$store.dispatch('FETCH_GET_DATA')  //第一种写法
-      this['FETCH_GET_DATA']()                   //第二种写法  上面...mapActions(['FETCH_GET_DATA']) 
+    // 添加和修改
+    onSumibt(option, dialogVisible) {
+      this.editDialogVisible(dialogVisible);
+      if (!this.id) {
+        this.addData(option).then(res => {
+          if (res.data.status == 200) {
+            this.$message.success("添加成功");
+            this.$store.dispatch("FETCH_GET_DATA");
+          }
+        });
+      } else {
+        option.id = this.id;
+        this.editDatas(option).then(res => {
+          if (res.data.status == 200) {
+            this.$message.success("修改成功");
+            this.$store.dispatch("FETCH_GET_DATA");
+          }
+        });
+      }
+    },
+    //模态框封装
+    toggleDialogVisible(option) {
+      this.editDialogVisible(option);
     }
   }
-}
-
-/**
- * computed 拿state值
-*/
+};
 </script>
 

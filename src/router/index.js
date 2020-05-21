@@ -7,9 +7,18 @@ Vue.use(VueRouter)
 const routes = [
   { 
     path: '/', 
+    name:'login', 
+    component: routerAlias.Login,
+  },
+  { 
+    path: '/register', 
+    name:'register', 
+    component: routerAlias.Register,
+  },
+  { 
+    path: '/home', 
     name:'home', 
     component: routerAlias.Home,
-    props: route => ({query: route.query})
   },
 ]
 
@@ -19,6 +28,7 @@ const router = new VueRouter({
   routes
 })
 
+// 全局路由守卫
 // router.beforeEach((to, from, next) => {
 //   const token = localStorage.getItem('token')
   

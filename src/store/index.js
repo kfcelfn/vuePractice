@@ -1,45 +1,80 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import Axios from 'axios'
-// import { EDIT_NAME } from '@/constants/mutationTypes'
+import Axios from 'axios';
+import qs from 'qs'
+import api from '@/services/api'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    name: '铁柱',
-    age: 100,
-    count: 1,
-    data: []
+    data: [],
+    dialogVisible: false
   },
 
-  // state 只能在这改变， 相当于react 的 reducer
-  // 只能改同步的代码，不能改异步的。
   mutations: {
-    // 修改name
-    'EDIT_NAME' (state) {
-      state.name = '小白'
-    },
-    // 加 减
-    'FETCH_COUNT' (state, option) {
-      state.count = option ?  ++state.count : --state.count
-    },
     //修改data
     'FETCH_EDIT_DATA' (state, option) {
       state.data = option
     },
-  },
-  //写异步代码的 Action 提交的是 mutation，而不是直接变更状态。
-  actions: {
-    'FETCH_GET_DATA' ({ commit }) {
-      // console.log(context) 是一个对象 里面有dispatch，commit，state 等 平常可以解构出来
-      Axios.get('https://blogs.zdldove.top/Home/Apis/listWithPage')
-        .then( res => {
-          // FETCH_DATA是mutations里 方法名
-          commit('FETCH_EDIT_DATA', res.data.result)
-        })
+    
+    //模态框
+    'FETCH_EDIT_DIALOGVISIBLE' (state, option) {
+      state.dialogVisible = !option
     }
   },
-  modules: {
+
+  actions: {
+    //模态框
+    'FETCH_DIALOGVISIBLE' ({ commit }, payload) {
+      commit('FETCH_EDIT_DIALOGVISIBLE', payload)
+    },
+    //查询所有数据
+    'FETCH_GET_DATA' ({ commit }) {
+      Axios.get(api.getUser)
+        .then( res => {
+          commit('FETCH_EDIT_DATA', res.data.users)
+        })
+    },
+    //删除
+    'FETCH_DELETE_DATA' ({ commit }, payload) {
+      console.log(commit)
+      return Axios.post(api.deleteUser, qs.stringify(payload))
+        .then( res => {
+          return res
+        })
+    },
+    //添加
+    'FETCH_ADD_DATA' ({ commit }, payload) {
+      console.log(commit)
+      return Axios.post(api.addUser, qs.stringify(payload))
+        .then( res => {
+          return res
+        })
+    },
+    //修改
+    'FETCH_EDIT_DATA' ({ commit }, payload) {
+      console.log(commit)
+      return Axios.post(api.editUser, qs.stringify(payload))
+        .then( res => {
+          return res
+        })
+    },
+    //注册
+    'FETCH_REGISTER' ({ commit }, payload) {
+      console.log(commit)
+      return Axios.post(api.registerUser, qs.stringify(payload))
+        .then( res => {
+          return res
+        })
+    },
+    //登录
+    'FETCH_LOGIN' ({ commit }, payload) {
+      console.log(commit)
+      return Axios.post(api.loginUser, qs.stringify(payload))
+        .then( res => {
+          return res
+        })
+    },
   }
 })
