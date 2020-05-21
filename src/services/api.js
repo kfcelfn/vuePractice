@@ -1,8 +1,10 @@
+let url = "http://api.baxiaobu.com/index.php/home"
+
 export default {
-  loginUser: 'http://api.baxiaobu.com/index.php/home/v1/login',
-  registerUser: 'http://api.baxiaobu.com/index.php/home/v1/register',
-  addUser: 'https://api.baxiaobu.com/index.php/home/v5/add',
-  editUser: 'https://api.baxiaobu.com/index.php/home/v5/updateUser',
-  getUser: 'https://api.baxiaobu.com/index.php/home/v5/getuser',
-  deleteUser: 'https://api.baxiaobu.com/index.php/home/v5/deleteUser',
+  'loginUser': url+'/v1/login',
+  'registerUser': url+'/v1/register',
+  'addUser': url+'/v5/add',
+  'editUser': url+'/v5/updateUser',
+  'getUser': url+'/v5/getuser',
+  'deleteUser': url+'/v5/deleteUser',
 }

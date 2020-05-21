@@ -46,12 +46,10 @@
         this.$refs[formName].validate(valid => {
           if (valid) {
             this.loginUser(this.ruleForm)
-              .then( res => {
+              .then(res => {
                 if(res.data.status == 200){
                   this.$message.success('登录成功')
-                  this.$router.history.push({name:'home'})
-                }else{
-                  this.$message.warning('账户或密码错误')
+                  this.$router.push({name: 'home'})
                 }
               })
           } else {

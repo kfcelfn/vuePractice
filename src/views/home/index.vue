@@ -1,5 +1,6 @@
 <template>
   <div class="views_home">
+    <h1>{{username}}</h1>
     <div class="search">
       <el-input v-model="searchVal" placeholder="请输入内容"></el-input>
       <el-button type="success">搜索</el-button>
@@ -43,7 +44,7 @@ export default {
     this.$store.dispatch("FETCH_GET_DATA");
   },
   computed: {
-    ...mapState(["data", "dialogVisible"])
+    ...mapState(["data", "dialogVisible", "username"])
   },
 
   methods: {
@@ -53,7 +54,6 @@ export default {
       addData: "FETCH_ADD_DATA",
       editDatas: "FETCH_EDIT_DATA"
     }),
-
     // 添加前
     addBefore() {
       this.toggleDialogVisible(this.dialogVisible);
@@ -71,31 +71,18 @@ export default {
     // 删除
     deleteData(id) {
       this.delete({id})
-        .then(res => {
-          if (res.data.status == 200) {
-            this.$message.success("删除成功");
-            this.$store.dispatch("FETCH_GET_DATA");
-          }
-      });
     },
     // 添加和修改
     onSumibt(option, dialogVisible) {
       this.editDialogVisible(dialogVisible);
+
       if (!this.id) {
-        this.addData(option).then(res => {
-          if (res.data.status == 200) {
-            this.$message.success("添加成功");
-            this.$store.dispatch("FETCH_GET_DATA");
-          }
-        });
+        this.addData(option)
+
       } else {
         option.id = this.id;
-        this.editDatas(option).then(res => {
-          if (res.data.status == 200) {
-            this.$message.success("修改成功");
-            this.$store.dispatch("FETCH_GET_DATA");
-          }
-        });
+
+        this.editDatas(option)
       }
     },
     //模态框封装
