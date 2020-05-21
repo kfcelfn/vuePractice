@@ -1,8 +1,8 @@
-const Home = () => import('@/views/home')
-const About = () => import('@/views/about')
-const Page = () => import('@/views/page')
-const Detail = () => import('@/views/detail')
-const Login = () => import('@/views/login')
+const Home = () => import(/* webpackChunkName: "home" */ '@/views/home')
+const About = () => import(/* webpackChunkName: "about" */ '@/views/about')
+const Page = () => import(/* webpackChunkName: "page" */ '@/views/page')
+const Detail = () => import(/* webpackChunkName: "detail" */ '@/views/detail')
+const Login = () => import(/* webpackChunkName: "login" */ '@/views/login')
 
 export {
   Home,
