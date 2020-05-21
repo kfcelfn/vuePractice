@@ -7,12 +7,6 @@ Vue.use(VueRouter)
 const routes = [
   // 里面name,可以作为一个标识符，跳转的时候可以使用到,使用了这种方式，必须使用params传递       this.$router.push( {name: 'home' , params:{cid: 2}})
   { 
-    path: '/', 
-    name:'home', 
-    component: routerAlias.Home,
-    props: route => ({query: route.query})
-  },
-  { 
     path: '/about/:id', 
     name: 'about', 
     component: routerAlias.About ,
@@ -36,7 +30,13 @@ const routes = [
       }
     ],
     redirect: '/page/detail/1'
-  }
+  },
+  { 
+    path: '/', 
+    name:'home', 
+    component: routerAlias.Home,
+    props: route => ({query: route.query})
+  },
 ]
 
 const router = new VueRouter({
