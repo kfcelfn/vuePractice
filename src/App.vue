@@ -5,6 +5,6 @@
 </template>
 
 <script>
-  import './styles.less'
+  import '@/styles/index.less'
   export default {}
 </script>

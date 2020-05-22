@@ -5,23 +5,20 @@
     <!-- 第二种 -->
     <!-- {{name}}--{{aname}} -- {{stateFn}} -->
     <!-- 第三种常用 -->
-    {{name}}--{{age}}
+    {{name}}--{{age}} -- {{loginName}}
     <button @click="editName">修改name值</button>
     <h1>{{count}}</h1>
     <button @click="onAdd">+</button>
     <button @click="onLow">-</button>
     <button @click="onGetData">请求数据</button>
-    <p>{{data}}</p>  
+    <p>{{loginData}}</p>  
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
-  created () {
-  },
-
   //第一种拿值方法
   // computed: {
   //   name () {
@@ -41,19 +38,40 @@ export default {
 
   //第三种拿值方法  mapState 数组方法   ***常用
   computed: {
-    ...mapState(['name', 'age', 'count', 'data'])
+    // 全局取state值,假如全局state里有个name, moudules局部也有，我们都需要拿到，那么全局取值或者局部取值，就要以对象形式取别名方式去拿name值
+    ...mapState(['name', 'age', 'count', 'data']),
+    // 通过命名空间，取单个文件的state值
+    // ...mapState('login', ['name']), //第一种数组方式
+    ...mapState('login', {          //第二种对象起别名方式
+      loginName: 'name',
+      loginData: 'data'
+    }),
   },
 
   methods: {
+    //全局
     ...mapActions(['FETCH_GET_DATA']),
+    //局部
+    ...mapActions('login', {
+      loginGetData: 'FETCH_GET_DATA'
+    }),
+
+    //全局mutations  commit 触发 mutations
+    ...mapMutations(['EDIT_NAME']),
+
+    //局部mutations  //局部使用对象起别名方式， 全局正常引入。 
+    ...mapMutations('login', {  
+      loginEditName: 'EDIT_NAME'
+    }),
 
     editName () {
-      // commit 触发 mutations
-      this.$store.commit('EDIT_NAME')
+      //全局mutations方法
+      this['EDIT_NAME']()
+      //局部mutations方法
+      this.loginEditName() 
     },
 
     onAdd () {
-      // commit 触发 mutations
       this.$store.commit('FETCH_COUNT', true)
     },
 
@@ -66,7 +84,9 @@ export default {
 
     onGetData () {
       // this.$store.dispatch('FETCH_GET_DATA')  //第一种写法
-      this['FETCH_GET_DATA']()                   //第二种写法  上面...mapActions(['FETCH_GET_DATA']) 
+      
+      this['FETCH_GET_DATA']({username: 123, pwd: 123})                   //第二种写法  上面...mapActions(['FETCH_GET_DATA'])  
+      // this.loginGetData()
     }
   }
 }
